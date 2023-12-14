@@ -5,6 +5,7 @@ import {
   push,
   onValue,
   remove,
+  update,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const appSettings = {
@@ -25,11 +26,11 @@ const msgList = document.getElementById("msg-list");
 publishBtn.addEventListener("click", addMsg);
 
 function addMsg() {
-
   let inputValues = {
     to: toInputField.value,
     from: fromInputField.value,
     msg: msgInputField.value,
+    likes: 0,
   };
 
   if (inputValues) {
@@ -70,8 +71,6 @@ function addMgsToList(msg) {
   let msgId = msg[0];
   let msgValue = msg[1];
 
-  let numOfLikes = 0;
-
   let newEl = document.createElement("li");
 
   newEl.innerHTML += `
@@ -79,8 +78,16 @@ function addMgsToList(msg) {
     <p class="name">From ${msgValue.from}</p>
     <p>Message: ${msgValue.msg}</p>
     <p class="name">To ${msgValue.to}</p>
-    <span>${numOfLikes}</span>
+    <span id="likes-${msgId}">${msgValue.likes}</span>
     </div>`;
 
   msgList.appendChild(newEl);
+
+  newEl.addEventListener("click", () => {
+    let msgRef = ref(database, "messages/" + msgId);
+
+    update(msgRef, {
+      likes: msgValue.likes + 1,
+    });
+  });
 }
