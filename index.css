@@ -117,12 +117,17 @@ ul {
   gap: 1rem;
 }
 
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
 li {
   background-color: #ffffff;
   padding: 1rem;
   color: #1b1924;
 }
 
-.name {
+.bold {
   font-weight: bold;
 }

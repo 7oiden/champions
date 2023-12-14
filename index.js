@@ -4,7 +4,6 @@ import {
   ref,
   push,
   onValue,
-  remove,
   update,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
@@ -31,6 +30,7 @@ function addMsg() {
     from: fromInputField.value,
     msg: msgInputField.value,
     likes: 0,
+    isLiked: false,
   };
 
   if (inputValues) {
@@ -72,13 +72,25 @@ function addMgsToList(msg) {
   let msgValue = msg[1];
 
   let newEl = document.createElement("li");
+  let likeIconClass = "far";
+
+  if (msgValue.isLiked) {
+    likeIconClass = "fas";
+  } else {
+    likeIconClass = "far";
+  }
 
   newEl.innerHTML += `
     <div class="card">
-    <p class="name">From ${msgValue.from}</p>
-    <p>Message: ${msgValue.msg}</p>
-    <p class="name">To ${msgValue.to}</p>
-    <span id="likes-${msgId}">${msgValue.likes}</span>
+    <p class="bold">From ${msgValue.from}</p>
+    <p>${msgValue.msg}</p>
+    <div class="card-bottom">
+    <p class="bold">To ${msgValue.to}</p>
+    <div>
+    <i class="${likeIconClass} fa-heart"></i>
+    <span id="likes-${msgId}" class="bold">${msgValue.likes}</span>
+    </div>
+    </div>
     </div>`;
 
   msgList.appendChild(newEl);
@@ -86,8 +98,20 @@ function addMgsToList(msg) {
   newEl.addEventListener("click", () => {
     let msgRef = ref(database, "messages/" + msgId);
 
-    update(msgRef, {
-      likes: msgValue.likes + 1,
-    });
+    if (!msgValue.isLiked) {
+      likeIconClass = "far";
+
+      update(msgRef, {
+        likes: msgValue.likes + 1,
+        isLiked: true,
+      });
+    } else {
+      likeIconClass = "fas";
+
+      update(msgRef, {
+        likes: msgValue.likes - 1,
+        isLiked: false,
+      });
+    }
   });
 }
