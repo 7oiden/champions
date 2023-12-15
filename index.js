@@ -86,9 +86,9 @@ function addMgsToList(msg) {
     <p>${msgValue.msg}</p>
     <div class="card-bottom">
     <p class="bold">To ${msgValue.to}</p>
-    <div>
+    <div class="likes-container">
     <i class="${likeIconClass} fa-heart"></i>
-    <span id="likes-${msgId}" class="bold">${msgValue.likes}</span>
+    <p id="likes-${msgId}" class="bold">${msgValue.likes}</p>
     </div>
     </div>
     </div>`;
